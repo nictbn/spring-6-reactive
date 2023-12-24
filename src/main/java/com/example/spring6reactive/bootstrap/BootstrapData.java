@@ -1,7 +1,9 @@
 package com.example.spring6reactive.bootstrap;
 
 import com.example.spring6reactive.domain.Beer;
+import com.example.spring6reactive.domain.Customer;
 import com.example.spring6reactive.repositories.BeerRepository;
+import com.example.spring6reactive.repositories.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -13,13 +15,17 @@ import java.time.LocalDateTime;
 @Component
 public class BootstrapData implements CommandLineRunner {
     private final BeerRepository beerRepository;
+    private final CustomerRepository customerRepository;
 
     @Override
     public void run(String... args) throws Exception {
         loadBeerData();
-
+        loadCustomerData();
         beerRepository.count().subscribe(count -> {
-            System.out.println("Count is: " + count);
+            System.out.println("Beer is: " + count);
+        });
+        customerRepository.count().subscribe(count -> {
+            System.out.println("Customer Count is: " + count);
         });
     }
 
@@ -59,6 +65,27 @@ public class BootstrapData implements CommandLineRunner {
                 beerRepository.save(beer1).subscribe();
                 beerRepository.save(beer2).subscribe();
                 beerRepository.save(beer3).subscribe();
+            }
+        });
+    }
+
+    private void loadCustomerData() {
+        customerRepository.count().subscribe(count -> {
+            if (count == 0) {
+                customerRepository.save(Customer.builder()
+                                .customerName("Customer 1")
+                                .build())
+                        .subscribe();
+
+                customerRepository.save(Customer.builder()
+                                .customerName("Customer 2")
+                                .build())
+                        .subscribe();
+
+                customerRepository.save(Customer.builder()
+                                .customerName("Customer 3")
+                                .build())
+                        .subscribe();
             }
         });
     }
