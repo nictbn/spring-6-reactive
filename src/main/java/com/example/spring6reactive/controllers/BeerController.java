@@ -34,4 +34,9 @@ public class BeerController {
                                 .fromHttpUrl("http://localhost:8080/" + BEER_PATH + "/" + savedDto.getId()).build().toUri())
                         .build());
     }
+
+    Mono<ResponseEntity<Void>> updateExistingBeer(@PathVariable("beerId") Integer beerId, @RequestBody BeerDto beerDto) {
+        beerService.updateBeer(beerId, beerDto).subscribe();
+        return Mono.just(ResponseEntity.ok().build());
+    }
 }
