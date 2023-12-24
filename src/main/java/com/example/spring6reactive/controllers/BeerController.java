@@ -35,6 +35,7 @@ public class BeerController {
                         .build());
     }
 
+    @PutMapping(BEER_PATH_ID)
     Mono<ResponseEntity<Void>> updateExistingBeer(@PathVariable("beerId") Integer beerId, @RequestBody BeerDto beerDto) {
         beerService.updateBeer(beerId, beerDto).subscribe();
         return Mono.just(ResponseEntity.ok().build());
