@@ -46,4 +46,10 @@ public class BeerController {
         beerService.patchBeer(beerId, beerDto).subscribe();
         return Mono.just(ResponseEntity.ok().build());
     }
+
+    @DeleteMapping(BEER_PATH_ID)
+    Mono<ResponseEntity<Void>> deleteExistingBeer(@PathVariable("beerId") Integer beerId) {
+        beerService.deleteBeerById(beerId).subscribe();
+        return Mono.just(ResponseEntity.noContent().build());
+    }
 }
