@@ -5,6 +5,7 @@ import com.example.spring6reactive.model.BeerDto;
 import com.example.spring6reactive.repositories.BeerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -43,6 +44,30 @@ public class BeerServiceImpl implements BeerService {
                     foundBeer.setQuantityOnHand(beerDto.getQuantityOnHand());
                     return foundBeer;
                 }).flatMap(beerRepository::save)
+                .map(beerMapper::beerToBeerDto);
+    }
+
+    @Override
+    public Mono<BeerDto> patchBeer(Integer beerId, BeerDto beerDto) {
+        return beerRepository.findById(beerId).map(foundBeer -> {
+                    if (StringUtils.hasText(beerDto.getBeerName())) {
+                        foundBeer.setBeerName(beerDto.getBeerName());
+                    }
+                    if (StringUtils.hasText(beerDto.getBeerStyle())) {
+                        foundBeer.setBeerStyle(beerDto.getBeerStyle());
+                    }
+                    if (beerDto.getPrice() != null) {
+                        foundBeer.setPrice(beerDto.getPrice());
+                    }
+                    if (StringUtils.hasText(beerDto.getUpc())) {
+                        foundBeer.setUpc(beerDto.getUpc());
+                    }
+                    if (beerDto.getQuantityOnHand() != null) {
+                        foundBeer.setQuantityOnHand(beerDto.getQuantityOnHand());
+                    }
+                    return foundBeer;
+                })
+                .flatMap(beerRepository::save)
                 .map(beerMapper::beerToBeerDto);
     }
 }
