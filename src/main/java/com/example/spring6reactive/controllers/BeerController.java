@@ -39,7 +39,7 @@ public class BeerController {
     @PutMapping(BEER_PATH_ID)
     Mono<ResponseEntity<Void>> updateExistingBeer(@Validated @PathVariable("beerId") Integer beerId, @RequestBody BeerDto beerDto) {
         beerService.updateBeer(beerId, beerDto).subscribe();
-        return Mono.just(ResponseEntity.ok().build());
+        return Mono.just(ResponseEntity.noContent().build());
     }
 
     @PatchMapping(BEER_PATH_ID)

@@ -48,4 +48,12 @@ class BeerControllerTest {
                 .expectStatus().isCreated()
                 .expectHeader().location("http://localhost:8080/api/v2/beer/4");
     }
+
+    @Test
+    void testUpdateBeer() {
+        webTestClient.put().uri(BEER_PATH_ID, 1)
+                .body(Mono.just(getTestBeer()), BeerDto.class)
+                .exchange()
+                .expectStatus().isNoContent();
+    }
 }
