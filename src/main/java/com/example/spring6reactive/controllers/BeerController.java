@@ -4,6 +4,7 @@ import com.example.spring6reactive.model.BeerDto;
 import com.example.spring6reactive.services.BeerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
@@ -28,7 +29,7 @@ public class BeerController {
     }
 
     @PostMapping(BEER_PATH)
-    Mono<ResponseEntity<Void>> createNewBeer(@RequestBody BeerDto beerDto) {
+    Mono<ResponseEntity<Void>> createNewBeer(@Validated @RequestBody BeerDto beerDto) {
         return beerService.saveNewBeer(beerDto)
                 .map(savedDto -> ResponseEntity.created(UriComponentsBuilder
                                 .fromHttpUrl("http://localhost:8080/" + BEER_PATH + "/" + savedDto.getId()).build().toUri())
@@ -36,13 +37,13 @@ public class BeerController {
     }
 
     @PutMapping(BEER_PATH_ID)
-    Mono<ResponseEntity<Void>> updateExistingBeer(@PathVariable("beerId") Integer beerId, @RequestBody BeerDto beerDto) {
+    Mono<ResponseEntity<Void>> updateExistingBeer(@Validated @PathVariable("beerId") Integer beerId, @RequestBody BeerDto beerDto) {
         beerService.updateBeer(beerId, beerDto).subscribe();
         return Mono.just(ResponseEntity.ok().build());
     }
 
     @PatchMapping(BEER_PATH_ID)
-    Mono<ResponseEntity<Void>> patchExistingBeer(@PathVariable("beerId") Integer beerId, @RequestBody BeerDto beerDto) {
+    Mono<ResponseEntity<Void>> patchExistingBeer(@Validated @PathVariable("beerId") Integer beerId, @RequestBody BeerDto beerDto) {
         beerService.patchBeer(beerId, beerDto).subscribe();
         return Mono.just(ResponseEntity.ok().build());
     }
