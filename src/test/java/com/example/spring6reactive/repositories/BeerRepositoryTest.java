@@ -9,8 +9,6 @@ import org.springframework.context.annotation.Import;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @DataR2dbcTest
 @Import(DatabaseConfig.class)
 class BeerRepositoryTest {
