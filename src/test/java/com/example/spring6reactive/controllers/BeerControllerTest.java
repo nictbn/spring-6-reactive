@@ -116,11 +116,20 @@ class BeerControllerTest {
     }
 
     @Test
-    @Order(9)
+    @Order(10)
     void testDeleteBeer() {
         webTestClient.delete().uri(BEER_PATH_ID, 1)
                 .exchange()
                 .expectStatus()
                 .isNoContent();
+    }
+
+    @Test
+    @Order(11)
+    void testDeleteNotFound() {
+        webTestClient.delete().uri(BEER_PATH_ID, 999)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
     }
 }
