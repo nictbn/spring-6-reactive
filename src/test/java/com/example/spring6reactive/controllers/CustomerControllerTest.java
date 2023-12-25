@@ -119,8 +119,7 @@ public class CustomerControllerTest {
         webTestClient.delete()
                 .uri(CUSTOMER_PATH_ID, 1)
                 .exchange()
-                .expectStatus()
-                .isNoContent();
+                .expectStatus().isNoContent();
     }
 
     @Test
