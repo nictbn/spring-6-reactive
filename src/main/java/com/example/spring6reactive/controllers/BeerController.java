@@ -48,8 +48,9 @@ public class BeerController {
 
     @PatchMapping(BEER_PATH_ID)
     Mono<ResponseEntity<Void>> patchExistingBeer(@Validated @PathVariable("beerId") Integer beerId, @RequestBody BeerDto beerDto) {
-        beerService.patchBeer(beerId, beerDto).subscribe();
-        return Mono.just(ResponseEntity.ok().build());
+        return beerService.patchBeer(beerId, beerDto)
+                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)))
+                .map(updatedDto -> ResponseEntity.ok().build());
     }
 
     @DeleteMapping(BEER_PATH_ID)
