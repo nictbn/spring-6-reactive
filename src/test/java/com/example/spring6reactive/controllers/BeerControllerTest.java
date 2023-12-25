@@ -48,6 +48,14 @@ class BeerControllerTest {
 
     @Test
     @Order(3)
+    void testGetByIdNotFound() {
+        webTestClient.get().uri(BEER_PATH_ID, 999)
+                .exchange()
+                .expectStatus().isNotFound();
+    }
+
+    @Test
+    @Order(4)
     void testCreateBeer() {
         webTestClient.post().uri(BEER_PATH)
                 .body(Mono.just(getTestBeer()), BeerDto.class)
@@ -58,7 +66,7 @@ class BeerControllerTest {
     }
 
     @Test
-    @Order(4)
+    @Order(5)
     void testCreateBeerBadData() {
         Beer testBeer = getTestBeer();
         testBeer.setBeerName("");
@@ -70,7 +78,7 @@ class BeerControllerTest {
     }
 
     @Test
-    @Order(5)
+    @Order(6)
     void testUpdateBeer() {
         webTestClient.put().uri(BEER_PATH_ID, 1)
                 .body(Mono.just(getTestBeer()), BeerDto.class)
@@ -79,7 +87,7 @@ class BeerControllerTest {
     }
 
     @Test
-    @Order(6)
+    @Order(7)
     void testUpdateBeerBad() {
         Beer testBeer = getTestBeer();
         testBeer.setBeerStyle("");
@@ -90,7 +98,7 @@ class BeerControllerTest {
     }
 
     @Test
-    @Order(7)
+    @Order(8)
     void testDeleteBeer() {
         webTestClient.delete().uri(BEER_PATH_ID, 1)
                 .exchange()
