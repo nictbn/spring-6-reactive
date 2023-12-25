@@ -1,5 +1,6 @@
 package com.example.spring6reactive.controllers;
 
+import com.example.spring6reactive.domain.Beer;
 import com.example.spring6reactive.model.BeerDto;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -58,6 +59,18 @@ class BeerControllerTest {
 
     @Test
     @Order(4)
+    void testCreateBeerBadData() {
+        Beer testBeer = getTestBeer();
+        testBeer.setBeerName("");
+        webTestClient.post().uri(BEER_PATH)
+                .body(Mono.just(testBeer), BeerDto.class)
+                .header(CONTENT_TYPE, APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isBadRequest();
+    }
+
+    @Test
+    @Order(5)
     void testUpdateBeer() {
         webTestClient.put().uri(BEER_PATH_ID, 1)
                 .body(Mono.just(getTestBeer()), BeerDto.class)
@@ -66,7 +79,7 @@ class BeerControllerTest {
     }
 
     @Test
-    @Order(5)
+    @Order(6)
     void testDeleteBeer() {
         webTestClient.delete().uri(BEER_PATH_ID, 1)
                 .exchange()
