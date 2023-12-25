@@ -80,6 +80,17 @@ class BeerControllerTest {
 
     @Test
     @Order(6)
+    void testUpdateBeerBad() {
+        Beer testBeer = getTestBeer();
+        testBeer.setBeerStyle("");
+        webTestClient.put().uri(BEER_PATH_ID, 1)
+                .body(Mono.just(testBeer), BeerDto.class)
+                .exchange()
+                .expectStatus().isBadRequest();
+    }
+
+    @Test
+    @Order(7)
     void testDeleteBeer() {
         webTestClient.delete().uri(BEER_PATH_ID, 1)
                 .exchange()
