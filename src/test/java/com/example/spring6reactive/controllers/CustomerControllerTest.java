@@ -13,6 +13,7 @@ import reactor.core.publisher.Mono;
 
 import static com.example.spring6reactive.controllers.CustomerController.CUSTOMER_PATH;
 import static com.example.spring6reactive.controllers.CustomerController.CUSTOMER_PATH_ID;
+import static org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.mockOAuth2Login;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest
@@ -24,7 +25,9 @@ public class CustomerControllerTest {
     @Test
     @Order(1)
     void testListCustomers() {
-        webTestClient.get().uri(CUSTOMER_PATH)
+        webTestClient
+                .mutateWith(mockOAuth2Login())
+                .get().uri(CUSTOMER_PATH)
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().valueEquals("Content-type", "application/json")
@@ -34,7 +37,9 @@ public class CustomerControllerTest {
     @Test
     @Order(2)
     void testGetById() {
-        webTestClient.get().uri(CUSTOMER_PATH_ID, 1)
+        webTestClient
+                .mutateWith(mockOAuth2Login())
+                .get().uri(CUSTOMER_PATH_ID, 1)
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().valueEquals("Content-type", "application/json")
@@ -44,7 +49,9 @@ public class CustomerControllerTest {
     @Test
     @Order(3)
     void testGetByIdNotFound() {
-        webTestClient.get().uri(CUSTOMER_PATH_ID, 999)
+        webTestClient
+                .mutateWith(mockOAuth2Login())
+                .get().uri(CUSTOMER_PATH_ID, 999)
                 .exchange()
                 .expectStatus().isNotFound();
     }
@@ -53,7 +60,9 @@ public class CustomerControllerTest {
     @Order(4)
     void testCreateCustomer() {
 
-        webTestClient.post().uri(CUSTOMER_PATH)
+        webTestClient
+                .mutateWith(mockOAuth2Login())
+                .post().uri(CUSTOMER_PATH)
                 .body(Mono.just(getCustomerDto()), CustomerDto.class)
                 .header("Content-Type", "application/json")
                 .exchange()
@@ -66,7 +75,9 @@ public class CustomerControllerTest {
     void testCreateCustomerBadData() {
         CustomerDto customerDto = getCustomerDto();
         customerDto.setCustomerName("");
-        webTestClient.post().uri(CUSTOMER_PATH)
+        webTestClient
+                .mutateWith(mockOAuth2Login())
+                .post().uri(CUSTOMER_PATH)
                 .body(Mono.just(customerDto), CustomerDto.class)
                 .header("Content-Type", "application/json")
                 .exchange()
@@ -76,7 +87,9 @@ public class CustomerControllerTest {
     @Test
     @Order(6)
     void testUpdateCustomer() {
-        webTestClient.put()
+        webTestClient
+                .mutateWith(mockOAuth2Login())
+                .put()
                 .uri(CUSTOMER_PATH_ID, 1)
                 .body(Mono.just(getCustomerDto()), CustomerDto.class)
                 .exchange()
@@ -88,7 +101,9 @@ public class CustomerControllerTest {
     void testUpdateCustomerBadData() {
         CustomerDto customerDto = getCustomerDto();
         customerDto.setCustomerName("");
-        webTestClient.put()
+        webTestClient
+                .mutateWith(mockOAuth2Login())
+                .put()
                 .uri(CUSTOMER_PATH_ID, 1)
                 .body(Mono.just(customerDto), CustomerDto.class)
                 .exchange()
@@ -98,7 +113,9 @@ public class CustomerControllerTest {
     @Test
     @Order(8)
     void testUpdateCustomerNotFound() {
-        webTestClient.put().uri(CUSTOMER_PATH_ID, 999)
+        webTestClient
+                .mutateWith(mockOAuth2Login())
+                .put().uri(CUSTOMER_PATH_ID, 999)
                 .body(Mono.just(getCustomerDto()), CustomerDto.class)
                 .exchange()
                 .expectStatus().isNotFound();
@@ -107,7 +124,9 @@ public class CustomerControllerTest {
     @Test
     @Order(9)
     void testPatchIdNotFound() {
-        webTestClient.patch().uri(CUSTOMER_PATH_ID, 999)
+        webTestClient
+                .mutateWith(mockOAuth2Login())
+                .patch().uri(CUSTOMER_PATH_ID, 999)
                 .body(Mono.just(getCustomerDto()), CustomerDto.class)
                 .exchange()
                 .expectStatus().isNotFound();
@@ -116,7 +135,9 @@ public class CustomerControllerTest {
     @Test
     @Order(10)
     void testDeleteCustomer() {
-        webTestClient.delete()
+        webTestClient
+                .mutateWith(mockOAuth2Login())
+                .delete()
                 .uri(CUSTOMER_PATH_ID, 1)
                 .exchange()
                 .expectStatus().isNoContent();
@@ -125,7 +146,9 @@ public class CustomerControllerTest {
     @Test
     @Order(11)
     void testDeleteNotFound() {
-        webTestClient.delete().uri(CUSTOMER_PATH_ID, 999)
+        webTestClient
+                .mutateWith(mockOAuth2Login())
+                .delete().uri(CUSTOMER_PATH_ID, 999)
                 .exchange()
                 .expectStatus().isNotFound();
     }
